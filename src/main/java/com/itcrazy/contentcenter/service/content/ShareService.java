@@ -4,6 +4,7 @@ import com.itcrazy.contentcenter.dao.content.ShareMapper;
 import com.itcrazy.contentcenter.domain.dto.content.ShareDTO;
 import com.itcrazy.contentcenter.domain.dto.user.UserDTO;
 import com.itcrazy.contentcenter.domain.entity.content.Share;
+import com.itcrazy.contentcenter.feignclient.UserCenterFeignClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -25,11 +26,12 @@ public class ShareService {
 
     private final ShareMapper shareMapper;
 
-    private final RestTemplate restTemplate;
+    //    private final RestTemplate restTemplate;
+    private final UserCenterFeignClient userCenterFeignClient;
 
 //    private final DiscoveryClient discoveryClient;
 
-    public ShareDTO findById(Integer id){
+    public ShareDTO findById(Integer id) {
         //获取分享详情
         Share share = shareMapper.selectByPrimaryKey(id);
 
@@ -56,14 +58,15 @@ public class ShareService {
         //怎样调用用户微服务的/users/{userId}???
         String targerURL=targerURLs.get(i);*/
 
-        UserDTO userDTO = this.restTemplate.getForObject("http://user-center/users/{userId}", UserDTO.class, userId);
+//        UserDTO userDTO = this.restTemplate.getForObject("http://user-center/users/{userId}", UserDTO.class, userId);
 
+        UserDTO userDTO = this.userCenterFeignClient.findById(userId);
 //        log.info("请求的目标地址:{}",targerURL);
 
         //消息装配
-        ShareDTO shareDTO=new ShareDTO();
+        ShareDTO shareDTO = new ShareDTO();
 
-        BeanUtils.copyProperties(share,shareDTO);
+        BeanUtils.copyProperties(share, shareDTO);
 
         shareDTO.setWxNickname(userDTO.getWxNickname());
 

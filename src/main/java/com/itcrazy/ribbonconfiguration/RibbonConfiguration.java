@@ -14,7 +14,7 @@ public class RibbonConfiguration {
 
     @Bean
     public IRule ribbonRule(){
-        return new NacosSameClusterWeightedRule();
+        return new RandomRule();
     }
 
 //    @Bean

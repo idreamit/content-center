@@ -1,7 +1,10 @@
 package com.itcrazy.contentcenter;
 
 import com.itcrazy.contentcenter.dao.content.ShareMapper;
+import com.itcrazy.contentcenter.domain.dto.user.UserDTO;
 import com.itcrazy.contentcenter.domain.entity.content.Share;
+import com.itcrazy.contentcenter.feignclient.TestBaiduFeignClient;
+import com.itcrazy.contentcenter.feignclient.TestUserCenterFeignClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.ServiceInstance;
@@ -51,5 +54,21 @@ public class TestController {
         // consul/eureka/zookeeper ... 都可以使用discoveryClient
 //        System.out.println(this.discoveryClient.getServices());
         return this.discoveryClient.getInstances("user-center");
+    }
+
+    @Autowired
+    private TestUserCenterFeignClient testUserCenterFeignClient;
+
+    @GetMapping("/test-get")
+    public UserDTO query(UserDTO userDTO){
+        return testUserCenterFeignClient.query(userDTO);
+    }
+
+    @Autowired
+    private TestBaiduFeignClient testBaiduFeignClient;
+
+    @GetMapping("/baidu")
+    public String baiduIndex(){
+        return this.testBaiduFeignClient.index();
     }
 }
