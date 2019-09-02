@@ -12,10 +12,15 @@ spring:
         #指定nacos server的地址
         server-addr: localhost:8848
         cluster-name: BJ
+
     sentinel:
+      filter:
+        # 开启掉对Spring MVC端点的保护
+        enabled: true
       transport:
         # 指定sentinel控制台的地址
         dashboard: localhost:8080
+        client-ip: 127.0.0.1
 
   application:
     # 服务名称尽量使用-，不要使用_，更不要使用特殊字符
@@ -48,6 +53,9 @@ logging:
 
 # feign日志配置文件方式
 feign:
+  # 为feign整合sentinel
+  sentinel:
+    enabled: true
   client:
     config:
       # 想要调用微服务的名称
@@ -70,3 +78,7 @@ management:
     web:
       exposure:
         include: '*'
+
+#resttemplate:
+#  sentinel:
+#    enabled: false
